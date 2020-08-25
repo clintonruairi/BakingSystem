@@ -38,16 +38,36 @@ def start():
         exit()   
     
 def generate_cc():
-    no = "400000"
-    for i in range(10):
-        no += str(random.randint(0, 9))
-    return no
+    bank_id_no = "400000"
+    for i in range(9): # Account Identifier.
+        bank_id_no += str(random.randint(0, 9))
+
+    cont = []
+    for num in bank_id_no[0::2]: # multiply odd digits by 2, Luhn's algorithm.
+        cont.append(int(num) * 2)
+
+    for num in bank_id_no[1::2]: # gather all even digits.
+        cont.append(int(num))
+
+    newcont = []
+    for num in cont: # subtract 9 from any digit greater than 9.
+        if num > 9:
+            newcont.append(num - 9)
+        else:
+            newcont.append(num)
+
+    final = sum(newcont)
+    for i in range(0, 10): # Find the number that when added to the sum of the previous 15 numbers, is divisible by 10.
+        if (i + final) % 10 == 0:
+            bank_id_no += str(i) # This will be the "checksum".
+    
+    return bank_id_no
     
 def generate_pin():
-    no = ""
+    pin = ""
     for i in range(4):
-        no += str(random.randint(0, 9))
-    return no
+        pin += str(random.randint(0, 9))
+    return pin
 
 def exit():
     sys.exit("Bye!")
